@@ -11,16 +11,28 @@ bool rightblk = false;
 bool leftblk = false;
 bool strrtblk = false;
 bool strltblk = false;
+bool backrtblk = false;
+bool backltblk = false;
 void setup() 
 {  
   ridar.begin(9600);
   Serial.begin(9600);
-  pinMode(RIGHT, OUTPUT); //#3
-  pinMode(LEFT, OUTPUT);  //#4
   pinMode(STR, OUTPUT); //#1
   pinMode(BACK, OUTPUT);  //#2
-  //#5 stright right
-  //#6 straight left
+  pinMode(LEFT, OUTPUT);  //#3  
+  pinMode(RIGHT, OUTPUT); //#4
+  //#5 stright left
+  //#6 straight right
+  //#7 back left
+  //#8 back right
+  //# blink straight
+  //# blink back
+  //# blink left
+  //# blink right
+  //# blink straight left
+  //# blink straight right
+  //# blink back left
+  //# blink back right
   ridar.println("Initiating");
   digitalWrite(RIGHT, LOW);
   digitalWrite(LEFT, LOW);
@@ -45,8 +57,12 @@ void loop()
         leftblk = false;
         strrtblk = false;
         strltblk = false;
+        backrtblk = false;
+        backltblk = false;
         ridar.println("Cleared All");
         break;
+
+        //SOLID LEDs Set high 1-4
       case 1:
         digitalWrite(STR, HIGH);
         strblk = false;
@@ -58,70 +74,101 @@ void loop()
         ridar.println("Back set");
         break;
       case 3:
-        digitalWrite(RIGHT, HIGH);
-        rightblk = false;
-        ridar.println("Right set");
-        break;
-      case 4:
         digitalWrite(LEFT, HIGH);
         leftblk = false;
         ridar.println("Left set");
         break;
-     case 5:
-        digitalWrite(STR, HIGH);
+      case 4:
         digitalWrite(RIGHT, HIGH);
-        strrtblk = false;
-        ridar.println("Straight Rigt set");
+        rightblk = false;
+        ridar.println("Right set");
         break;
-      case 6:
+
+     //SET half angles SOLID LEDs High   
+     case 5:
         digitalWrite(STR, HIGH);
         digitalWrite(LEFT, HIGH);
         strltblk = false;
-        ridar.println("Straight Left set");
+        ridar.println("Straight left set");
+        break;
+      case 6:
+        digitalWrite(STR, HIGH);
+        digitalWrite(RIGHT, HIGH);
+        strrtblk = false;
+        ridar.println("Straight right set");
         break;
       case 7:
-        strblk = true;
+        digitalWrite(BACK, HIGH);
+        digitalWrite(LEFT, HIGH);
+        backltblk = false;
+        ridar.println("back left set");
         break;
       case 8:
-        backblk = true;
+        digitalWrite(BACK, HIGH);
+        digitalWrite(RIGHT, HIGH);
+        backrtblk = false;
+        ridar.println("back right set");
         break;
+
+       //BLINK LEDs 
       case 9:
-        rightblk = true;
+        strblk = true;
         break;
       case 10:
-        leftblk = true;
+        backblk = true;
         break;
       case 11:
-        strrtblk = true;
+        leftblk = true;
         break;
       case 12:
+        rightblk = true;
+        break;
+      case 13:
         strltblk = true;
-        break;  
+        break;
+      case 14:
+        strrtblk = true;
+        break;
+      case 15:
+        backltblk = true;
+        break;
+       case 16:
+        backrtblk = true;
+        break;
+       
       default:
         ridar.println("Invalid code");
         break;
     }
   }
-  if(strblk || backblk || rightblk || leftblk || strrtblk || strltblk)  {
+  if(strblk || backblk || rightblk || leftblk || strrtblk || strltblk || backltblk || backrtblk)  {
     for(int i = 0; i < 5; i++) {
       if(strblk){
         digitalWrite(STR, HIGH);
       }
-      if(backblk){
+      else if(backblk){
         digitalWrite(BACK, HIGH);
       }
-      if(rightblk){
+      else if(rightblk){
         digitalWrite(RIGHT, HIGH);
       }
-      if(leftblk){
+      else if(leftblk){
         digitalWrite(LEFT, HIGH);
       }
-      if(strrtblk){
+      else if(strrtblk){
         digitalWrite(STR, HIGH);
         digitalWrite(RIGHT, HIGH);
       }
-      if(strltblk){
+      else if(strltblk){
         digitalWrite(STR, HIGH);
+        digitalWrite(LEFT, HIGH);
+      }
+      else if(backrtblk){
+        digitalWrite(BACK, HIGH);
+        digitalWrite(RIGHT, HIGH);
+      }
+      else if(backltblk){
+        digitalWrite(BACK, HIGH);
         digitalWrite(LEFT, HIGH);
       }
       delay(100);
@@ -135,5 +182,4 @@ void loop()
   else{
     delay(1000);
   }
-  
 } 
